@@ -1,0 +1,15 @@
+::ng-deep .snack-bar-create {
+    --mdc-snackbar-container-color: green;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+  
+  ::ng-deep .snack-bar-edit {
+    --mdc-snackbar-container-color: yellow;
+    --mdc-snackbar-supporting-text-color: black;
+  }
+  
+  ::ng-deep .snack-bar-delete {
+    --mdc-snackbar-container-color: red;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+  

@@ -1,0 +1,155 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Product Management</h2>
+  
+    <!-- Product Form -->
+    <form (ngSubmit)="onSubmit(productForm)" #productForm="ngForm">
+        <div> <input type="hidden" [(ngModel)]="productModel.id" name="id"/></div>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label>Name</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="productModel.name"
+            name="name"
+            required
+            minlength="3"
+            #name="ngModel"
+            class="form-control"
+          />
+          <div *ngIf="productForm.submitted && name.invalid" class="text-danger">
+            <small *ngIf="name.errors?.['required']">Name is required</small>
+            <small *ngIf="name.errors?.['minlength']">Minimum 3 characters</small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label>Price</label>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="productModel.price"
+            name="price"
+            required
+            minlength="2"
+            #price="ngModel" 
+          />
+          <div class="text-danger" *ngIf="productForm.submitted && price.invalid">
+            <small *ngIf="price.errors?.['required']">Price is required.</small>
+            <small *ngIf="price.errors?.['min']">Price must be at least 1.</small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label>Category</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="productModel.category"
+            name="category"
+            required
+            minlength="3"
+            #category="ngModel"
+          />
+          <div class="text-danger" *ngIf="productForm.submitted && category.invalid">
+            <small *ngIf="category.errors?.['required']">Category is required.</small>
+            <small *ngIf="category.errors?.['minlength']">Minimum 3 characters.</small>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success me-2" >
+        {{ productModel.id ? 'Update' : 'Add' }} Product
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="resetForm()"
+        *ngIf="productModel.id"
+      >
+        Cancel
+      </button>
+    </form>
+  
+    <hr class="my-4" />
+    <div class="row mb-3">
+        <div class="col-md-4">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search by Name or Category"
+            [(ngModel)]="searchText"
+            name="searchText"
+            (ngModelChange)="filterProducts()"
+          />
+        </div>
+      </div>
+  
+    <!-- Product Table -->
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th (click)="sortTable('id')">
+                ID 
+                <span *ngIf="sortColumn === 'id'" [style.color]="'white'">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sortTable('name')">
+                Name 
+                <span *ngIf="sortColumn === 'name'" [style.color]="'white'">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sortTable('price')">
+                Price ($) 
+                <span *ngIf="sortColumn === 'price'" [style.color]="'white'">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sortTable('category')">
+                Category 
+                <span *ngIf="sortColumn === 'category'" [style.color]="'white'">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of paginatedList">
+            <td>{{ p.id }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.price }}</td>
+            <td>{{ p.category }}</td>
+            <td>
+              <button class="btn btn-sm btn-primary me-2" (click)="editProduct(p)">
+                Edit
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteProduct(p.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <nav *ngIf="totalPages > 1" class="mt-3">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="changePage(currentPage - 1)">Previous</button>
+          </li>
+      
+          <li 
+            class="page-item" 
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1"
+          >
+            <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+          </li>
+      
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="changePage(currentPage + 1)">Next</button>
+          </li>
+        </ul>
+      </nav>
+      
+  </div>
+  
